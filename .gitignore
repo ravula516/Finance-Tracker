@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+finance.db
+env/
+venv/
+.env

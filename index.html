@@ -1,0 +1,1676 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Finance Tracker</title>
+
+  <style>
+    :root {
+      --black: #080b12;
+      --navy: #17223b;
+      --panel: #101628;
+      --gold: #e9c875;
+      --green: #52d6a0;
+      --green-dark: #153c32;
+      --text: #f5e8c7;
+      --muted: #c4b68e;
+      --border: #293858;
+      --red: #ff8585;
+      --blue: #8fb8ff;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      padding: 34px 5%;
+      background: var(--black);
+      color: var(--text);
+      font: 16px/1.6 Arial, Helvetica, sans-serif;
+    }
+
+    .container { width: 100%; max-width: 1700px; margin: auto; }
+
+    header { padding: 20px 0 30px; margin-bottom: 20px; }
+
+    .eyebrow {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      color: var(--gold);
+      font-size: clamp(34px, 4vw, 50px);
+      line-height: 1.2;
+      margin: 0 0 14px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: bold;
+      max-width: 900px;
+      margin: 0;
+    }
+
+    .section {
+      padding: 24px 0;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(41,56,88,.65);
+    }
+
+    .section-heading { margin-bottom: 20px; }
+
+    h2 { color: var(--gold); font-size: 27px; margin: 0 0 5px; }
+    h3 { margin: 0; color: var(--gold); }
+
+    .section-description { color: var(--muted); margin: 0; font-size: 15px; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+      margin: 22px 0 8px;
+    }
+
+    .metric { padding: 8px 0 16px; min-width: 0; }
+
+    .metric-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--muted);
+      font-weight: bold;
+      margin: 0 0 8px;
+    }
+
+    .metric-value {
+      font-size: clamp(25px, 3vw, 38px);
+      font-weight: bold;
+      color: var(--green);
+      overflow-wrap: anywhere;
+      margin: 0;
+    }
+
+    .metric-value.gold { color: var(--gold); }
+    .metric-value.red { color: var(--red); }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      gap: 14px;
+      align-items: end;
+      margin: 22px 0;
+    }
+
+    .field {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label { color: var(--muted); font-size: 14px; font-weight: bold; }
+
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 14px;
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid #35476a;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input::placeholder { color: #b6a77d; }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--gold);
+      border-color: var(--gold);
+    }
+
+    input[type="date"], input[type="month"] { color-scheme: dark; }
+
+    button {
+      padding: 12px 17px;
+      background: var(--green-dark);
+      color: #a7f5d4;
+      border: 1px solid #28775c;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+
+    button:hover { background: #205744; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+
+    .primary-button {
+      background: var(--gold);
+      color: #17120a;
+      border-color: var(--gold);
+    }
+
+    .primary-button:hover { background: #f5dc98; }
+
+    .secondary-button {
+      background: #202b42;
+      color: var(--text);
+      border-color: #394b6d;
+    }
+
+    .danger-button {
+      background: #421f2a;
+      color: #ffc0c0;
+      border-color: #773444;
+    }
+
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+
+    .message { min-height: 24px; color: var(--gold); font-weight: bold; margin: 12px 0; }
+
+    .muted { color: var(--muted); }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 650px;
+      border-collapse: collapse;
+      background: var(--panel);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--navy);
+      color: var(--gold);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    td { color: var(--text); overflow-wrap: anywhere; }
+
+    tbody tr:nth-child(even) { background: #131d31; }
+    tbody tr:hover { background: #1b2b45; }
+    td button { margin: 2px; }
+
+    .empty-state { padding: 18px 0; color: var(--muted); }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      align-items: end;
+      margin: 20px 0;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .status-list { display: grid; gap: 18px; margin-top: 20px; }
+
+    .status-row { padding: 0 0 17px; border-bottom: 1px solid var(--border); }
+
+    .status-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .status-name { font-weight: bold; color: var(--text); }
+
+    .status-numbers { color: var(--muted); font-size: 14px; }
+
+    .progress {
+      height: 9px;
+      border-radius: 20px;
+      background: #202b42;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: var(--green);
+    }
+
+    .progress-fill.over { background: var(--red); }
+
+    .small-note { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+
+    .result-summary { color: var(--muted); margin: 12px 0; }
+
+    /* AI Financial Advisor */
+
+    .ai-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .ai-result {
+      margin-top: 20px;
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .ai-result h3 {
+      margin: 22px 0 10px;
+    }
+
+    .ai-result h3:first-child { margin-top: 0; }
+
+    .ai-result h4 {
+      color: var(--gold);
+      margin: 16px 0 8px;
+    }
+
+    .ai-result p { margin: 9px 0; overflow-wrap: anywhere; }
+
+    .ai-result ul, .ai-result ol { padding-left: 24px; }
+
+    .ai-result li { margin: 8px 0; }
+
+    .ai-loading { color: var(--gold); font-weight: bold; }
+
+    .ai-error { color: var(--red); }
+
+    .ai-data-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .ai-data-card {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-width: 0;
+    }
+
+    .ai-data-card .metric-label { margin-bottom: 5px; }
+
+    .ai-data-card .metric-value { font-size: clamp(20px, 2.5vw, 28px); }
+
+    .ai-advice-text { line-height: 1.8; overflow-wrap: anywhere; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 0 10px;
+      font-size: 13px;
+    }
+
+    @media(max-width:1050px) {
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      form button { min-height: 47px; }
+      .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media(max-width:600px) {
+      body { padding: 18px 16px; font-size: 15px; }
+      header { padding-top: 8px; }
+      h1 { font-size: 33px; }
+      h2 { font-size: 23px; }
+      .subtitle { font-size: 16px; }
+      form, .filter-grid { grid-template-columns: 1fr; }
+      .metric-grid { gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric-value { font-size: 26px; }
+      .section { padding: 19px 0; margin-bottom: 15px; }
+      th, td { padding: 11px 12px; }
+      .ai-data-grid { grid-template-columns: 1fr; }
+      .ai-result { padding: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <header>
+    <p class="eyebrow">Personal Finance Dashboard</p>
+    <h1>Smart Finance Tracker</h1>
+    <p class="subtitle">Track income, manage expenses, compare spending with your budgets, and understand your financial position in one place.</p>
+  </header>
+
+  <!-- FINANCIAL OVERVIEW -->
+
+  <section class="section" id="dashboardSection">
+    <div class="section-heading">
+      <h2>Financial Overview</h2>
+      <p class="section-description">Your current totals, calculated from the saved records in your database.</p>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <p class="metric-label">Total Income</p>
+        <p class="metric-value" id="dashboardIncome">₹0.00</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Total Expenses</p>
+        <p class="metric-value gold" id="dashboardExpenses">₹0.00</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Available Balance</p>
+        <p class="metric-value" id="dashboardBalance">₹0.00</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Total Budget</p>
+        <p class="metric-value gold" id="dashboardBudget">₹0.00</p>
+      </div>
+    </div>
+
+    <p class="result-summary" id="dashboardCounts">Loading your financial overview…</p>
+    <button type="button" class="secondary-button" onclick="loadDashboard()">Refresh Overview</button>
+    <p class="message" id="dashboardMessage" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- ADD EXPENSE -->
+
+  <section class="section" id="expenseEntrySection">
+    <div class="section-heading">
+      <h2>Add New Expense</h2>
+      <p class="section-description">Record what you spend. Use the same category name as your budget to compare them accurately.</p>
+    </div>
+
+    <form id="expenseForm">
+      <div class="field">
+        <label for="title">Expense title</label>
+        <input type="text" id="title" placeholder="e.g. Groceries" required maxlength="120">
+      </div>
+      <div class="field">
+        <label for="amount">Amount (₹)</label>
+        <input type="number" id="amount" placeholder="Enter amount" min="0.01" step="0.01" required>
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <input type="text" id="category" placeholder="e.g. Food" required maxlength="80">
+      </div>
+      <button class="primary-button" type="submit">+ Add Expense</button>
+    </form>
+
+    <p class="message" id="expenseMessage" role="status" aria-live="polite"></p>
+
+    <div class="metric">
+      <p class="metric-label">Total Expenses</p>
+      <p class="metric-value" id="totalExpenses">₹0.00</p>
+    </div>
+
+    <button type="button" class="primary-button" onclick="getExpenses()">View Expenses</button>
+  </section>
+
+  <!-- EXPENSE HISTORY -->
+
+  <section class="section" id="expenseHistorySection" hidden>
+    <div class="section-heading">
+      <h2>Expense History</h2>
+      <p class="section-description">Review, search, filter, edit, or delete recorded expenses.</p>
+    </div>
+
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label for="expenseSearch">Search exact title</label>
+        <input id="expenseSearch" type="text" placeholder="e.g. Groceries">
+      </div>
+      <button type="button" onclick="searchExpenses()">Search Expenses</button>
+
+      <div class="filter-item">
+        <label for="categoryFilter">Filter by category</label>
+        <input id="categoryFilter" type="text" placeholder="e.g. Food">
+      </div>
+      <button type="button" onclick="filterExpensesByCategory()">Filter Category</button>
+
+      <div class="filter-item">
+        <label for="expenseDateFilter">Filter by date</label>
+        <input id="expenseDateFilter" type="date">
+      </div>
+      <button type="button" onclick="filterExpensesByDate()">Filter Date</button>
+
+      <div class="filter-item">
+        <label for="monthFilter">Filter by month</label>
+        <input type="month" id="monthFilter">
+      </div>
+      <button type="button" onclick="filterExpensesByMonth()">Filter Month</button>
+
+      <div class="field">
+        <label for="minAmount">Minimum amount (₹)</label>
+        <input id="minAmount" type="number" min="0" step="0.01" placeholder="0">
+      </div>
+      <div class="field">
+        <label for="maxAmount">Maximum amount (₹)</label>
+        <input id="maxAmount" type="number" min="0" step="0.01" placeholder="1000">
+      </div>
+      <button type="button" onclick="filterExpensesByRange()">Filter Amount Range</button>
+      <button type="button" class="secondary-button" onclick="getExpenses()">Show All Expenses</button>
+    </div>
+
+    <p class="message" id="historyMessage" role="status" aria-live="polite"></p>
+    <div id="expenses"><p class="empty-state">Load expenses to view history.</p></div>
+  </section>
+
+  <!-- INCOME TRACKING -->
+
+  <section class="section" id="incomeSection">
+    <div class="section-heading">
+      <h2>Income Tracking</h2>
+      <p class="section-description">Add income such as salary or freelance earnings, then compare it with your spending and balance.</p>
+    </div>
+
+    <form id="incomeForm">
+      <div class="field">
+        <label for="incomeSource">Income source</label>
+        <input type="text" id="incomeSource" placeholder="e.g. Salary" required maxlength="120">
+      </div>
+      <div class="field">
+        <label for="incomeAmount">Amount (₹)</label>
+        <input type="number" id="incomeAmount" placeholder="Enter amount" min="0.01" step="0.01" required>
+      </div>
+      <div></div>
+      <button class="primary-button" type="submit">+ Add Income</button>
+    </form>
+
+    <p class="message" id="incomeMessage" role="status" aria-live="polite"></p>
+
+    <div class="button-row">
+      <button type="button" onclick="getIncome()">View Income</button>
+      <button type="button" class="secondary-button" onclick="loadIncomeSummary()">Refresh Income Total</button>
+    </div>
+
+    <div class="metric">
+      <p class="metric-label">Total Income</p>
+      <p class="metric-value" id="totalIncome">₹0.00</p>
+    </div>
+
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label for="incomeSearch">Search exact source</label>
+        <input id="incomeSearch" type="text" placeholder="e.g. Salary">
+      </div>
+      <button type="button" onclick="searchIncome()">Search Income</button>
+      <button type="button" class="secondary-button" onclick="getIncome()">Show All Income</button>
+    </div>
+
+    <div id="incomeHistory" hidden></div>
+  </section>
+
+  <!-- BUDGETS -->
+
+  <section class="section" id="budgetSection">
+    <div class="section-heading">
+      <h2>Budgets & Spending Comparison</h2>
+      <p class="section-description">Set a spending limit for each category. The status compares each limit against expenses saved under the same category name.</p>
+    </div>
+
+    <form id="budgetForm">
+      <div class="field">
+        <label for="budgetCategory">Budget category</label>
+        <input id="budgetCategory" type="text" placeholder="e.g. Food" required maxlength="80">
+      </div>
+      <div class="field">
+        <label for="budgetLimit">Budget limit (₹)</label>
+        <input id="budgetLimit" type="number" placeholder="Enter limit" min="0.01" step="0.01" required>
+      </div>
+      <div></div>
+      <button class="primary-button" type="submit">+ Add Budget</button>
+    </form>
+
+    <p class="message" id="budgetMessage" role="status" aria-live="polite"></p>
+
+    <div class="button-row">
+      <button type="button" onclick="getBudgets()">View Budgets</button>
+      <button type="button" class="primary-button" onclick="getBudgetStatus()">Compare Budgets with Expenses</button>
+    </div>
+
+    <div id="budgetStatus" class="status-list"></div>
+
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label for="budgetSearch">Search exact budget category</label>
+        <input id="budgetSearch" type="text" placeholder="e.g. Food">
+      </div>
+      <button type="button" onclick="searchBudgets()">Search Budgets</button>
+      <button type="button" class="secondary-button" onclick="getBudgets()">Show All Budgets</button>
+    </div>
+
+    <div id="budgetHistory"></div>
+    <p class="small-note">Budget status compares each category with all expenses currently stored for that category.</p>
+  </section>
+
+  <!-- MONTHLY REPORT -->
+
+  <section class="section" id="monthlySection">
+    <div class="section-heading">
+      <h2>Monthly Spending Report</h2>
+      <p class="section-description">Choose a month to view the total spent and the expenses recorded during that month.</p>
+    </div>
+
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label for="reportMonth">Choose month</label>
+        <input type="month" id="reportMonth">
+      </div>
+      <button type="button" class="primary-button" onclick="loadMonthlyReport()">Generate Monthly Report</button>
+    </div>
+
+    <div class="metric">
+      <p class="metric-label">Selected Month's Expenses</p>
+      <p class="metric-value gold" id="monthlyTotal">—</p>
+    </div>
+
+    <p class="message" id="monthlyMessage" role="status" aria-live="polite"></p>
+    <div id="monthlyExpenses"></div>
+  </section>
+
+  <!-- NEW AI FINANCIAL ADVISOR -->
+
+  <section class="section" id="aiAdviceSection">
+    <div class="section-heading">
+      <h2>AI Financial Advisor</h2>
+      <p class="section-description">
+        Get AI-generated insights about your income, expenses, spending patterns,
+        budget overruns, and potential savings using your local Llama 3.2 model.
+      </p>
+    </div>
+
+    <div class="ai-actions">
+      <button
+        type="button"
+        class="primary-button"
+        id="generateAdviceButton"
+        onclick="loadAIAdvice()">
+        Generate AI Financial Advice
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        id="refreshAdviceButton"
+        onclick="loadAIAdvice()">
+        Refresh Analysis
+      </button>
+    </div>
+
+    <p class="message" id="aiAdviceMessage" role="status" aria-live="polite"></p>
+
+    <div id="aiAdviceResult" class="ai-result" aria-live="polite">
+      <p class="empty-state">
+        Click "Generate AI Financial Advice" to analyze your saved financial records.
+      </p>
+    </div>
+  </section>
+
+  <footer>Smart Finance Tracker · Manage your money with confidence</footer>
+
+</div>
+
+<script>
+  const API_BASE = "http://127.0.0.1:8000";
+
+  let expensesAreVisible = false;
+  let incomeIsVisible = false;
+  let budgetsAreVisible = false;
+  let budgetStatusLoaded = false;
+
+  const money = value =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+
+  const safe = value =>
+    String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch]));
+
+  const setMessage = (id, text) => {
+    document.getElementById(id).textContent = text || "";
+  };
+
+  async function api(path, options = {}) {
+    const response = await fetch(`${API_BASE}${path}`, options);
+
+    let body;
+    try {
+      body = await response.json();
+    } catch {
+      body = {};
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        body.detail || body.message || `Request failed (${response.status})`
+      );
+    }
+
+    return body;
+  }
+
+  function queryString(values) {
+    const params = new URLSearchParams();
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        params.set(key, value);
+      }
+    });
+
+    return params.toString();
+  }
+
+  // FINANCIAL OVERVIEW
+
+  async function loadDashboard() {
+    setMessage("dashboardMessage", "Loading overview…");
+
+    try {
+      const data = await api("/dashboard");
+
+      document.getElementById("dashboardIncome").textContent = money(data.total_income);
+      document.getElementById("dashboardExpenses").textContent = money(data.total_expenses);
+      document.getElementById("dashboardBalance").textContent = money(data.balance);
+      document.getElementById("dashboardBudget").textContent = money(data.total_budget);
+
+      document.getElementById("totalExpenses").textContent = money(data.total_expenses);
+      document.getElementById("totalIncome").textContent = money(data.total_income);
+
+      document.getElementById("dashboardBalance").classList.toggle(
+        "red",
+        Number(data.balance) < 0
+      );
+
+      document.getElementById("dashboardCounts").textContent =
+        `${Number(data.income_count) || 0} income record(s) · ` +
+        `${Number(data.expense_count) || 0} expense record(s)`;
+
+      setMessage("dashboardMessage", "Overview updated.");
+    } catch (error) {
+      setMessage(
+        "dashboardMessage",
+        `${error.message} — make sure FastAPI is running.`
+      );
+    }
+  }
+
+  // EXPENSE HISTORY
+
+  function renderExpenseTable(data, targetId = "expenses") {
+    const target = document.getElementById(targetId);
+
+    if (!Array.isArray(data) || !data.length) {
+      target.innerHTML = '<p class="empty-state">No expenses found for this view.</p>';
+      return;
+    }
+
+    target.innerHTML = `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Title</th><th>Amount</th>
+              <th>Category</th><th>Date</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(item => `
+              <tr>
+                <td>${Number(item.id)}</td>
+                <td>${safe(item.title)}</td>
+                <td>${money(item.amount)}</td>
+                <td>${safe(item.category)}</td>
+                <td>${safe(item.date || "—")}</td>
+                <td>
+                  <button type="button" onclick="editExpense(${Number(item.id)})">Edit</button>
+                  <button type="button" class="danger-button" onclick="deleteExpense(${Number(item.id)})">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  async function showExpenseResults(path, message = "Expenses loaded.") {
+    expensesAreVisible = true;
+    document.getElementById("expenseHistorySection").hidden = false;
+    setMessage("historyMessage", "Loading expenses…");
+
+    try {
+      const data = await api(path);
+      renderExpenseTable(data);
+      setMessage("historyMessage", `${message} ${Array.isArray(data) ? data.length : 0} record(s).`);
+      await loadDashboard();
+      return data;
+    } catch (error) {
+      document.getElementById("expenses").innerHTML = "";
+      setMessage("historyMessage", `${error.message}. Check that the FastAPI server is running.`);
+      return null;
+    }
+  }
+
+  function getExpenses() {
+    return showExpenseResults("/expenses?skip=0&limit=100", "All expenses loaded.");
+  }
+
+  async function searchExpenses() {
+    const keyword = document.getElementById("expenseSearch").value.trim();
+
+    if (!keyword) {
+      setMessage("historyMessage", "Enter an exact expense title to search.");
+      return;
+    }
+
+    await showExpenseResults(
+      `/expenses/search/${encodeURIComponent(keyword)}`,
+      "Search complete."
+    );
+  }
+
+  async function filterExpensesByCategory() {
+    const category = document.getElementById("categoryFilter").value.trim();
+
+    if (!category) {
+      setMessage("historyMessage", "Enter a category to filter.");
+      return;
+    }
+
+    await showExpenseResults(
+      `/expenses/category/${encodeURIComponent(category)}`,
+      "Category filter complete."
+    );
+  }
+
+  async function filterExpensesByDate() {
+    const date = document.getElementById("expenseDateFilter").value;
+
+    if (!date) {
+      setMessage("historyMessage", "Choose a date first.");
+      return;
+    }
+
+    await showExpenseResults(
+      `/expenses/date/${encodeURIComponent(date)}`,
+      "Date filter complete."
+    );
+  }
+
+  async function filterExpensesByMonth() {
+    const value = document.getElementById("monthFilter").value;
+
+    if (!value) {
+      setMessage("historyMessage", "Choose a month first.");
+      return;
+    }
+
+    const [year, month] = value.split("-");
+
+    await showExpenseResults(
+      `/expenses/month/${year}/${Number(month)}`,
+      "Monthly filter complete."
+    );
+  }
+
+  async function filterExpensesByRange() {
+    const min = document.getElementById("minAmount").value;
+    const max = document.getElementById("maxAmount").value;
+
+    if (min === "" || max === "" || Number(min) < 0 || Number(max) < Number(min)) {
+      setMessage("historyMessage", "Enter a valid minimum and maximum amount.");
+      return;
+    }
+
+    await showExpenseResults(
+      `/expenses/range?${queryString({ min_amount: min, max_amount: max })}`,
+      "Amount range filter complete."
+    );
+  }
+
+  document.getElementById("expenseForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const expense = {
+      title: document.getElementById("title").value.trim(),
+      amount: Number(document.getElementById("amount").value),
+      category: document.getElementById("category").value.trim()
+    };
+
+    if (!expense.title || !expense.category ||
+        !Number.isFinite(expense.amount) || expense.amount <= 0) {
+      setMessage("expenseMessage", "Enter a title, category, and positive amount.");
+      return;
+    }
+
+    setMessage("expenseMessage", "Saving expense…");
+
+    try {
+      await api("/expense", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(expense)
+      });
+
+      event.target.reset();
+      setMessage("expenseMessage", "Expense added successfully.");
+
+      await loadDashboard();
+
+      if (expensesAreVisible) await getExpenses();
+
+      await refreshBudgetStatusIfLoaded();
+    } catch (error) {
+      setMessage("expenseMessage", `${error.message} — check the FastAPI server.`);
+    }
+  });
+
+  async function deleteExpense(id) {
+    if (!confirm("Are you sure you want to delete this expense?")) return;
+
+    try {
+      await api(`/expenses/delete/${id}`, { method: "DELETE" });
+
+      setMessage("historyMessage", "Expense deleted successfully.");
+
+      await loadDashboard();
+
+      if (expensesAreVisible) await getExpenses();
+
+      await refreshBudgetStatusIfLoaded();
+    } catch (error) {
+      setMessage("historyMessage", error.message);
+    }
+  }
+
+  async function editExpense(id) {
+    try {
+      const records = await api("/expenses?skip=0&limit=100");
+      const item = records.find(row => Number(row.id) === Number(id));
+
+      if (!item) {
+        setMessage("historyMessage", "Expense not found in the currently loaded records.");
+        return;
+      }
+
+      const title = prompt("Enter expense title:", item.title);
+      if (title === null) return;
+
+      const amount = prompt("Enter expense amount:", item.amount);
+      if (amount === null) return;
+
+      const category = prompt("Enter expense category:", item.category);
+      if (category === null) return;
+
+      if (!title.trim() || !category.trim() ||
+          !Number.isFinite(Number(amount)) || Number(amount) <= 0) {
+        alert("Enter a valid title, positive amount, and category.");
+        return;
+      }
+
+      await api(`/expenses/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          amount: Number(amount),
+          category: category.trim()
+        })
+      });
+
+      setMessage("historyMessage", "Expense updated successfully.");
+
+      await loadDashboard();
+
+      if (expensesAreVisible) await getExpenses();
+
+      await refreshBudgetStatusIfLoaded();
+    } catch (error) {
+      setMessage("historyMessage", error.message);
+    }
+  }
+
+  // INCOME TRACKING
+
+  function renderIncomeTable(data) {
+    const target = document.getElementById("incomeHistory");
+
+    incomeIsVisible = true;
+    target.hidden = false;
+
+    if (!Array.isArray(data) || !data.length) {
+      target.innerHTML = '<p class="empty-state">No income records found.</p>';
+      return;
+    }
+
+    target.innerHTML = `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Source</th><th>Amount</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            ${data.map(item => `
+              <tr>
+                <td>${Number(item.id)}</td>
+                <td>${safe(item.source)}</td>
+                <td>${money(item.amount)}</td>
+                <td>
+                  <button type="button" onclick="editIncome(${Number(item.id)})">Edit</button>
+                  <button type="button" class="danger-button" onclick="deleteIncome(${Number(item.id)})">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  async function getIncome() {
+    setMessage("incomeMessage", "Loading income…");
+
+    try {
+      const data = await api("/income?skip=0&limit=100");
+      renderIncomeTable(data);
+      setMessage("incomeMessage", `${data.length} income record(s) loaded.`);
+      await loadIncomeSummary();
+    } catch (error) {
+      setMessage("incomeMessage", `${error.message} — check the FastAPI server.`);
+    }
+  }
+
+  async function loadIncomeSummary() {
+    try {
+      const data = await api("/income/summary");
+      document.getElementById("totalIncome").textContent = money(data.total_income);
+    } catch (error) {
+      setMessage("incomeMessage", error.message);
+    }
+  }
+
+  async function searchIncome() {
+    const source = document.getElementById("incomeSearch").value.trim();
+
+    if (!source) {
+      setMessage("incomeMessage", "Enter an exact income source to search.");
+      return;
+    }
+
+    try {
+      const data = await api(`/income/search/${encodeURIComponent(source)}`);
+      renderIncomeTable(data);
+      setMessage("incomeMessage", `${data.length} matching income record(s).`);
+    } catch (error) {
+      setMessage("incomeMessage", error.message);
+    }
+  }
+
+  async function editIncome(id) {
+    try {
+      const records = await api("/income?skip=0&limit=100");
+      const item = records.find(row => Number(row.id) === Number(id));
+
+      if (!item) {
+        setMessage("incomeMessage", "Income record not found in the loaded records.");
+        return;
+      }
+
+      const source = prompt("Enter income source:", item.source);
+      if (source === null) return;
+
+      const amount = prompt("Enter income amount:", item.amount);
+      if (amount === null) return;
+
+      if (!source.trim() || !Number.isFinite(Number(amount)) || Number(amount) <= 0) {
+        alert("Enter a source and a positive amount.");
+        return;
+      }
+
+      await api(`/income/${id}?${queryString({
+        source: source.trim(),
+        amount: Number(amount)
+      })}`, { method: "PUT" });
+
+      setMessage("incomeMessage", "Income updated successfully.");
+
+      await loadDashboard();
+      await loadIncomeSummary();
+
+      if (incomeIsVisible) await getIncome();
+    } catch (error) {
+      setMessage("incomeMessage", error.message);
+    }
+  }
+
+  async function deleteIncome(id) {
+    if (!confirm("Are you sure you want to delete this income record?")) return;
+
+    try {
+      await api(`/income/${id}`, { method: "DELETE" });
+
+      setMessage("incomeMessage", "Income deleted successfully.");
+
+      await loadDashboard();
+      await loadIncomeSummary();
+
+      if (incomeIsVisible) await getIncome();
+    } catch (error) {
+      setMessage("incomeMessage", error.message);
+    }
+  }
+
+  document.getElementById("incomeForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const source = document.getElementById("incomeSource").value.trim();
+    const amount = Number(document.getElementById("incomeAmount").value);
+
+    if (!source || !Number.isFinite(amount) || amount <= 0) {
+      setMessage("incomeMessage", "Enter a source and positive amount.");
+      return;
+    }
+
+    setMessage("incomeMessage", "Saving income…");
+
+    try {
+      await api(`/income?${queryString({ source, amount })}`, { method: "POST" });
+
+      event.target.reset();
+
+      setMessage("incomeMessage", "Income added successfully.");
+
+      await loadDashboard();
+      await loadIncomeSummary();
+
+      if (incomeIsVisible) await getIncome();
+    } catch (error) {
+      setMessage("incomeMessage", `${error.message} — check the FastAPI server.`);
+    }
+  });
+
+  // BUDGET TRACKING
+
+  function renderBudgetTable(data) {
+    const target = document.getElementById("budgetHistory");
+
+    budgetsAreVisible = true;
+
+    if (!Array.isArray(data) || !data.length) {
+      target.innerHTML = '<p class="empty-state">No budgets found. Add a budget above.</p>';
+      return;
+    }
+
+    target.innerHTML = `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Category</th><th>Budget Limit</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            ${data.map(item => `
+              <tr>
+                <td>${Number(item.id)}</td>
+                <td>${safe(item.category)}</td>
+                <td>${money(item.limit_amount)}</td>
+                <td>
+                  <button type="button" onclick="editBudget(${Number(item.id)})">Edit</button>
+                  <button type="button" class="danger-button" onclick="deleteBudget(${Number(item.id)})">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  async function getBudgets() {
+    setMessage("budgetMessage", "Loading budgets…");
+
+    try {
+      const data = await api("/budgets?skip=0&limit=100");
+
+      renderBudgetTable(data);
+
+      setMessage("budgetMessage", `${data.length} budget record(s) loaded.`);
+
+      await loadDashboard();
+    } catch (error) {
+      setMessage("budgetMessage", `${error.message} — check the FastAPI server.`);
+    }
+  }
+
+  async function searchBudgets() {
+    const category = document.getElementById("budgetSearch").value.trim();
+
+    if (!category) {
+      setMessage("budgetMessage", "Enter an exact budget category to search.");
+      return;
+    }
+
+    try {
+      const data = await api(`/budgets/search/${encodeURIComponent(category)}`);
+
+      renderBudgetTable(data);
+
+      setMessage("budgetMessage", `${data.length} matching budget(s).`);
+    } catch (error) {
+      setMessage("budgetMessage", error.message);
+    }
+  }
+
+  async function editBudget(id) {
+    try {
+      const records = await api("/budgets?skip=0&limit=100");
+      const item = records.find(row => Number(row.id) === Number(id));
+
+      if (!item) {
+        setMessage("budgetMessage", "Budget not found in the loaded records.");
+        return;
+      }
+
+      const category = prompt("Enter budget category:", item.category);
+      if (category === null) return;
+
+      const limitAmount = prompt("Enter budget limit:", item.limit_amount);
+      if (limitAmount === null) return;
+
+      if (!category.trim() || !Number.isFinite(Number(limitAmount)) ||
+          Number(limitAmount) <= 0) {
+        alert("Enter a category and a positive budget limit.");
+        return;
+      }
+
+      await api(`/budgets/${id}?${queryString({
+        category: category.trim(),
+        limit_amount: Number(limitAmount)
+      })}`, { method: "PUT" });
+
+      setMessage("budgetMessage", "Budget updated successfully.");
+
+      await loadDashboard();
+
+      if (budgetsAreVisible) await getBudgets();
+
+      await refreshBudgetStatusIfLoaded();
+    } catch (error) {
+      setMessage("budgetMessage", error.message);
+    }
+  }
+
+  async function deleteBudget(id) {
+    if (!confirm("Are you sure you want to delete this budget?")) return;
+
+    try {
+      await api(`/budgets/${id}`, { method: "DELETE" });
+
+      setMessage("budgetMessage", "Budget deleted successfully.");
+
+      await loadDashboard();
+
+      if (budgetsAreVisible) await getBudgets();
+
+      await refreshBudgetStatusIfLoaded();
+    } catch (error) {
+      setMessage("budgetMessage", error.message);
+    }
+  }
+
+  async function getBudgetStatus() {
+    const target = document.getElementById("budgetStatus");
+
+    target.innerHTML = '<p class="muted">Comparing budgets with saved expenses…</p>';
+
+    try {
+      const data = await api("/budgets/status");
+
+      budgetStatusLoaded = true;
+
+      if (!data.length) {
+        target.innerHTML = '<p class="empty-state">No budgets yet. Add a category budget above, then compare it with expenses.</p>';
+        return;
+      }
+
+      target.innerHTML = data.map(item => {
+        const limit = Number(item.budget_limit) || 0;
+        const spent = Number(item.spent) || 0;
+        const remaining = Number(item.remaining) || 0;
+
+        const percent = limit > 0
+          ? Math.min(100, Math.max(0, spent / limit * 100))
+          : (spent > 0 ? 100 : 0);
+
+        const over = spent > limit;
+
+        return `
+          <div class="status-row">
+            <div class="status-top">
+              <span class="status-name">${safe(item.category)}</span>
+              <span class="status-numbers">Spent ${money(spent)} of ${money(limit)}</span>
+            </div>
+
+            <div class="progress">
+              <div class="progress-fill ${over ? "over" : ""}" style="width:${percent}%"></div>
+            </div>
+
+            <div class="status-top" style="margin-top:8px;margin-bottom:0">
+              <span class="status-numbers">
+                ${over
+                  ? "Over budget by " + money(Math.abs(remaining))
+                  : "Remaining " + money(remaining)}
+              </span>
+              <strong style="color:${over ? "var(--red)" : "var(--green)"}">
+                ${limit > 0 ? Math.round(spent / limit * 100) : 0}% used
+              </strong>
+            </div>
+          </div>`;
+      }).join("");
+    } catch (error) {
+      target.innerHTML = "";
+      setMessage("budgetMessage", `${error.message} — check the FastAPI server.`);
+    }
+  }
+
+  async function refreshBudgetStatusIfLoaded() {
+    if (budgetStatusLoaded) await getBudgetStatus();
+  }
+
+  document.getElementById("budgetForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const category = document.getElementById("budgetCategory").value.trim();
+    const limit_amount = Number(document.getElementById("budgetLimit").value);
+
+    if (!category || !Number.isFinite(limit_amount) || limit_amount <= 0) {
+      setMessage("budgetMessage", "Enter a category and positive budget limit.");
+      return;
+    }
+
+    setMessage("budgetMessage", "Saving budget…");
+
+    try {
+      await api(`/budgets?${queryString({ category, limit_amount })}`, {
+        method: "POST"
+      });
+
+      event.target.reset();
+
+      setMessage("budgetMessage", "Budget added successfully.");
+
+      await loadDashboard();
+      await getBudgets();
+      await getBudgetStatus();
+    } catch (error) {
+      setMessage("budgetMessage", `${error.message} — check the FastAPI server.`);
+    }
+  });
+
+  // MONTHLY SPENDING REPORT
+
+  async function loadMonthlyReport() {
+    const value = document.getElementById("reportMonth").value;
+
+    if (!value) {
+      setMessage("monthlyMessage", "Choose a month first.");
+      return;
+    }
+
+    const [year, month] = value.split("-");
+
+    setMessage("monthlyMessage", "Generating report…");
+    document.getElementById("monthlyTotal").textContent = "—";
+
+    try {
+      const [summary, records] = await Promise.all([
+        api(`/expenses/monthly-summary/${year}/${Number(month)}`),
+        api(`/expenses/month/${year}/${Number(month)}`)
+      ]);
+
+      document.getElementById("monthlyTotal").textContent =
+        money(summary.total_expenses);
+
+      setMessage(
+        "monthlyMessage",
+        `${records.length} expense record(s) for ${value}.`
+      );
+
+      const target = document.getElementById("monthlyExpenses");
+
+      if (!records.length) {
+        target.innerHTML = '<p class="empty-state">No expenses recorded for this month.</p>';
+      } else {
+        target.innerHTML = `
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Title</th><th>Amount</th><th>Category</th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                ${records.map(item => `
+                  <tr>
+                    <td>${Number(item.id)}</td>
+                    <td>${safe(item.title)}</td>
+                    <td>${money(item.amount)}</td>
+                    <td>${safe(item.category)}</td>
+                    <td>${safe(item.date || "—")}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      }
+    } catch (error) {
+      setMessage("monthlyMessage", `${error.message} — check the FastAPI server.`);
+    }
+  }
+
+  // AI FINANCIAL ADVISOR
+
+  function formatAIAdvice(text) {
+    // Escape AI output before inserting it into the page.
+    // This prevents AI-generated HTML from being interpreted as executable markup.
+    const escaped = safe(text);
+
+    // Convert common Markdown formatting into readable HTML.
+    const lines = escaped.split(/\r?\n/);
+    const output = [];
+    let listItems = [];
+    let paragraphLines = [];
+
+    function flushParagraph() {
+      if (paragraphLines.length) {
+        output.push(`<p>${paragraphLines.join("<br>")}</p>`);
+        paragraphLines = [];
+      }
+    }
+
+    function flushList() {
+      if (listItems.length) {
+        output.push(`<ul>${listItems.map(item => `<li>${item}</li>`).join("")}</ul>`);
+        listItems = [];
+      }
+    }
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        flushParagraph();
+        flushList();
+        continue;
+      }
+
+      const heading = trimmed.match(/^(#{1,4})\s+(.+)$/);
+
+      if (heading) {
+        flushParagraph();
+        flushList();
+
+        const level = Math.min(heading[1].length + 2, 4);
+        output.push(`<h${level}>${heading[2]}</h${level}>`);
+        continue;
+      }
+
+      const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+
+      if (bullet) {
+        flushParagraph();
+        listItems.push(bullet[1]);
+        continue;
+      }
+
+      flushList();
+
+      paragraphLines.push(trimmed);
+    }
+
+    flushParagraph();
+    flushList();
+
+    return output.join("");
+  }
+
+  async function loadAIAdvice() {
+    const button = document.getElementById("generateAdviceButton");
+    const refreshButton = document.getElementById("refreshAdviceButton");
+    const result = document.getElementById("aiAdviceResult");
+
+    button.disabled = true;
+    refreshButton.disabled = true;
+
+    setMessage(
+      "aiAdviceMessage",
+      "Analyzing your financial records with Llama 3.2…"
+    );
+
+    result.innerHTML = `
+      <p class="ai-loading">
+        Please wait while the AI analyzes your income, expenses, and budgets.
+        Generating advice may take a little time.
+      </p>`;
+
+    try {
+      // Call the FastAPI endpoint created in main.py.
+      const data = await api("/ai/financial-advice");
+
+      if (
+        !data ||
+        !data.financial_data ||
+        typeof data.ai_advice !== "string"
+      ) {
+        throw new Error("The API returned an unexpected response.");
+      }
+
+      const financial = data.financial_data;
+
+      // Display the financial totals returned by the backend.
+      result.innerHTML = `
+        <h3>Your Financial Summary</h3>
+
+        <div class="ai-data-grid">
+          <div class="ai-data-card">
+            <p class="metric-label">Total Income</p>
+            <p class="metric-value" id="aiTotalIncome">—</p>
+          </div>
+
+          <div class="ai-data-card">
+            <p class="metric-label">Total Expenses</p>
+            <p class="metric-value gold" id="aiTotalExpenses">—</p>
+          </div>
+
+          <div class="ai-data-card">
+            <p class="metric-label">Calculated Balance</p>
+            <p class="metric-value" id="aiCalculatedBalance">—</p>
+          </div>
+        </div>
+
+        <h3>Spending by Category</h3>
+        <div id="aiCategoryBreakdown"></div>
+
+        <h3>Budget Comparison</h3>
+        <div id="aiBudgetBreakdown"></div>
+
+        <h3>AI-Generated Financial Advice</h3>
+        <div id="aiAdviceText" class="ai-advice-text"></div>
+
+        <p class="small-note">
+          Advice is AI-generated and based on the financial records currently
+          saved in your application. Review important financial decisions carefully.
+        </p>
+      `;
+
+      document.getElementById("aiTotalIncome").textContent =
+        money(financial.total_income);
+
+      document.getElementById("aiTotalExpenses").textContent =
+        money(financial.total_expenses);
+
+      const balanceElement = document.getElementById("aiCalculatedBalance");
+
+      balanceElement.textContent = money(financial.balance);
+
+      balanceElement.classList.toggle(
+        "red",
+        Number(financial.balance) < 0
+      );
+
+      // Show category totals and each category's percentage of all expenses.
+      const categories = financial.expense_breakdown || {};
+
+      const categoryEntries = Object.entries(categories)
+        .sort((a, b) => Number(b[1]) - Number(a[1]));
+
+      const categoryTarget = document.getElementById("aiCategoryBreakdown");
+
+      if (categoryEntries.length === 0) {
+        categoryTarget.innerHTML =
+          '<p class="empty-state">No expense records are available yet.</p>';
+      } else {
+        const totalExpenses = Number(financial.total_expenses) || 0;
+
+        categoryTarget.innerHTML = `
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount Spent</th>
+                  <th>Share of Expenses</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${categoryEntries.map(([category, amount]) => {
+                  const value = Number(amount) || 0;
+
+                  const percentage = totalExpenses > 0
+                    ? value / totalExpenses * 100
+                    : 0;
+
+                  return `
+                    <tr>
+                      <td>${safe(category)}</td>
+                      <td>${money(value)}</td>
+                      <td>${percentage.toFixed(1)}%</td>
+                    </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      }
+
+      // Compare actual spending with each saved budget.
+      const budgets = Array.isArray(financial.budgets)
+        ? financial.budgets
+        : [];
+
+      const budgetTarget = document.getElementById("aiBudgetBreakdown");
+
+      if (budgets.length === 0) {
+        budgetTarget.innerHTML =
+          '<p class="empty-state">No budgets have been created yet. Add budgets in the Budgets section to compare spending.</p>';
+      } else {
+        budgetTarget.innerHTML = `
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Budget Limit</th>
+                  <th>Amount Spent</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${budgets.map(budget => {
+                  const limit = Number(budget.limit) || 0;
+                  const spent = Number(budget.spent) || 0;
+                  const over = spent > limit;
+
+                  return `
+                    <tr>
+                      <td>${safe(budget.category)}</td>
+                      <td>${money(limit)}</td>
+                      <td>${money(spent)}</td>
+                      <td style="color:${over ? "var(--red)" : "var(--green)"}">
+                        ${over
+                          ? `Over budget by ${money(spent - limit)}`
+                          : `Within budget (${money(limit - spent)} left)`}
+                      </td>
+                    </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      }
+
+      // Display the text generated by the local Llama 3.2 model.
+      document.getElementById("aiAdviceText").innerHTML =
+        formatAIAdvice(data.ai_advice);
+
+      setMessage(
+        "aiAdviceMessage",
+        "AI financial analysis completed successfully."
+      );
+
+    } catch (error) {
+      result.innerHTML = `
+        <p class="ai-error">
+          Could not generate financial advice: ${safe(error.message)}
+        </p>
+        <p class="muted">
+          Check that FastAPI and Ollama are running and that
+          /ai/financial-advice works in FastAPI /docs.
+        </p>`;
+
+      setMessage("aiAdviceMessage", "Financial analysis failed.");
+    } finally {
+      button.disabled = false;
+      refreshButton.disabled = false;
+    }
+  }
+
+  // INITIAL PAGE SETUP
+
+  document.getElementById("reportMonth").value =
+    new Date().toISOString().slice(0, 7);
+
+  loadDashboard();
+</script>
+
+</body>
+</html>
